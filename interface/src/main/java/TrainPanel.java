@@ -21,7 +21,6 @@ public class TrainPanel extends JPanel {
         timer.start();
     }
 
-    //r4
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -36,7 +35,6 @@ public class TrainPanel extends JPanel {
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }
-
 
         for (Train train : trains) {
             Point p = train.getCurrentPosition();

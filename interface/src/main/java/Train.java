@@ -2,40 +2,6 @@ import java.awt.Point;
 import java.util.List;
 
 public class Train implements Runnable {
-//    private int x;
-//    private int y;
-//    private final int speed;
-//
-//    public Train(int startX, int startY, int speed)  {
-//        this.x = startX;
-//        this.y = startY;
-//        this.speed = speed;
-//    }
-//
-//    public synchronized void move() {
-//        x += speed;
-//    }
-//
-//    public synchronized int getX() {
-//        return x;
-//    }
-//
-//    public synchronized int getY() {
-//        return y;
-//    }
-//
-//    @Override
-//    public void run() {
-//        while (true) {
-//            move();
-//            try {
-//                Thread.sleep(100); // adjust for smoother/faster movement
-//            } catch (InterruptedException e) {
-//                break;
-//            }
-//        }
-//    }
-
 
     private final TrackPath path;
     private int positionIndex = 0;
@@ -70,7 +36,7 @@ public class Train implements Runnable {
             int newSectionIndex = positionIndex / sectionSize;
             if (newSectionIndex != sectionIndex) {
                 trackSections.get(sectionIndex).leave();
-                trackSections.get(newSectionIndex).enter();
+                trackSections.get(newSectionIndex).enter(this.name);
                 sectionIndex = newSectionIndex;
             }
 

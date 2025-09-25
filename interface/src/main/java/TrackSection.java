@@ -6,7 +6,7 @@ public class TrackSection {
         this.name = name;
     }
 
-    public synchronized void enter() {
+    public synchronized void enter(String trainName) {
         while (occupied) {
             try {
                 wait(); // wait until free
@@ -15,6 +15,7 @@ public class TrackSection {
             }
         }
         occupied = true;
+        System.out.println(trainName + " entered section " + name);
     }
 
     public synchronized void leave() {

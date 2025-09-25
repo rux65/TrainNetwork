@@ -10,11 +10,12 @@ public class MainInterface {
 
         SwingUtilities.invokeLater(() -> {
             // Left-to-right train
-            TrackPath fullPathA = TrackBuilder.createInboundTrackFromPlatform(TrackBuilder.createPlatformAPath());
+            TrackPath fullPathA = TrackPath.concat(
+                    TrackBuilder.createInboundTrackFromPlatform(TrackBuilder.createPlatformAPath()));
 
             // Right-to-left train (reverse the path!)
             TrackPath fullPathB = TrackPath.concat(
-                    TrackBuilder.createInboundTrackFromPlatform(TrackBuilder.reverse(TrackBuilder.createPlatformBPath()))
+                    TrackBuilder.reverse(TrackBuilder.createInboundTrackFromPlatform(TrackBuilder.createPlatformBPath()))
             );
 
             //todo ideally we separate straight lines and branches into platform sections
@@ -24,7 +25,7 @@ public class MainInterface {
             TrackSection platformBSection = new TrackSection("Platform B");
             TrackSection outboundSection = new TrackSection("Outbound");
             List<TrackSection> sectionsA = List.of(inboundSection, platformASection, outboundSection);
-            List<TrackSection> sectionsB = List.of(inboundSection, platformBSection, outboundSection);
+            List<TrackSection> sectionsB = List.of(outboundSection, platformBSection, inboundSection);
 
             Train train1 = new Train("Train A", fullPathA, sectionsA, 100);
             Train train2 = new Train("Train B", fullPathB, sectionsB, 100);
