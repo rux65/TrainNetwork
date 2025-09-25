@@ -6,11 +6,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
 
-
 public class TrainPanel extends JPanel {
     private final java.util.List<Train> trains;
     private final List<TrackPath> tracks;
-//    private int x = 0;
 
     public TrainPanel(List<Train> trains, List<TrackPath> tracks) {
         this.trains = trains;
@@ -22,46 +20,6 @@ public class TrainPanel extends JPanel {
         Timer timer = new Timer(50, e -> repaint());
         timer.start();
     }
-
-    //r2
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//        g.setColor(Color.GRAY);
-//        g.fillRect(0, 150, getWidth(), 20); // the track
-//
-//        g.setColor(Color.RED);
-//        for (Train train : trains) {
-//            g.fillRect(train.getX(), train.getY(), 40, 20); // draw train as rectangle
-//        }
-//    }
-
-    //r1
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//        g.setColor(Color.GRAY);
-//        g.fillRect(0, 90, getWidth(), 20); // the track
-//
-//        g.setColor(Color.RED);
-//        g.fillRect(x, 80, 40, 20); // the train
-//    }
-
-
-//    //r3
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//
-//        // Draw all trains
-//        g.setColor(Color.RED);
-//        for (Train train : trains) {
-//            Point p = train.getCurrentPosition();
-//            if (p != null) {
-//                g.fillRect(p.x - 10, p.y - 10, 20, 20);
-//            }
-//        }
-//    }
 
     //r4
     @Override

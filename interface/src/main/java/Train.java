@@ -60,18 +60,6 @@ public class Train implements Runnable {
         }
     }
 
-//    @Override
-//    public void run() {
-//        while (positionIndex < path.length() - 1) {
-//            move();
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                break;
-//            }
-//        }
-//    }
-
     public void run() {
         // Assume the path is divided roughly into section-lengths
         int sectionSize = path.length() / trackSections.size();

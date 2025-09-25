@@ -30,10 +30,4 @@ public class TrackPath {
         }
         return new TrackPath(result);
     }
-
-//    public static TrackPath reverse(TrackPath original) {
-//        List<Point> reversed = new ArrayList<>(original.getPoints());
-//        Collections.reverse(reversed);
-//        return new TrackPath(reversed);
-//    }
 }
