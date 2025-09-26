@@ -49,4 +49,9 @@ public class TrainPanel extends JPanel {
             }
         }
     }
+
+    public void addTrain(Train train) {
+        trains.add(train);
+        repaint(); // or revalidate/repaint if needed
+    }
 }

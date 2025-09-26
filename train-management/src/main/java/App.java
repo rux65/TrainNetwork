@@ -1,6 +1,9 @@
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,27 +36,75 @@ public class App {
 //        }
 //    }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         System.out.println("SLF4J Logger: " + LoggerFactory.getILoggerFactory().getClass());
 
-        String topic = "train-positions";
+        String trainPositionTopic = "train-positions";
+
 
         // Start the consumer
-        TrainMonitor.startConsumer(topic);
+        TrainMonitor.startConsumer(trainPositionTopic);
 
         // Common Kafka producer config
         Properties kafkaProps = new Properties();
         kafkaProps.put("bootstrap.servers", "localhost:9092");
         kafkaProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         kafkaProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaProps.put("auto.offset.reset", "earliest");
+        kafkaProps.put("group.id", UUID.randomUUID().toString());
 
-        int numberOfTrains = 3;
-        ExecutorService executor = Executors.newFixedThreadPool(numberOfTrains);
+        //int numberOfTrains = 3;
+        TrainRun.runTrains();
+        Thread.sleep(3000);
+//        ExecutorService executor = Executors.newFixedThreadPool(numberOfTrains);
+//
+//        for (int i = 1; i <= numberOfTrains; i++) {
+//            executor.submit(new Train(i, topic, kafkaProps));
+//        }
 
-        for (int i = 1; i <= numberOfTrains; i++) {
-            executor.submit(new Train(i, topic, kafkaProps));
-        }
+//        executor.shutdown();
 
-        executor.shutdown();
+
+        // produce train commands
+        sendTrainCommands();
+    }
+
+    static void sendTrainCommands() {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+
+        String jsonMessage = """
+                  {
+                  "trains": [
+                    {
+                      "name": "Train A",
+                      "route": "routeA",
+                      "speed": 100,
+                      "direction": "OUT"
+                    },
+                    {
+                      "name": "Train B",
+                      "route": "routeB",
+                      "speed": 90,
+                      "direction": "IN"
+                    }
+                  ]
+                }
+                """;
+
+        ProducerRecord<String, String> record = new ProducerRecord<>("train-control", jsonMessage);
+        producer.send(record, (metadata, exception) -> {
+            if (exception != null) {
+                exception.printStackTrace();
+            } else {
+                System.out.println("Message sent to topic: " + metadata.topic());
+            }
+        });
+        producer.flush();
+        producer.close();
     }
 }

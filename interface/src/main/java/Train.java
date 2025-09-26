@@ -9,16 +9,18 @@ public class Train implements Runnable {
     private final int speed;
     private final String name;
     private final Direction direction;
+    KafkaPositionProducer positionProducer = new KafkaPositionProducer();
 
-    public Train(String name, TrackPath path, List<TrackSection> trackSections, int speed, Direction direction) {
+    public Train(String name, TrackPath path, int speed, Direction direction) {
         this.name = name;
         this.path = path;
-        this.trackSections = trackSections;
+        this.trackSections = path.getSections();
         this.speed = speed;
         this.direction = direction;
     }
 
     public synchronized Point getCurrentPosition() {
+        //positionProducer.sendPosition(this.getName(), path.getPoint(positionIndex));
         return path.getPoint(positionIndex);
     }
 
@@ -43,6 +45,11 @@ public class Train implements Runnable {
                 }
 
                 positionIndex++;
+                Point p = getCurrentPosition();
+                if (p != null) {
+                    System.out.println("sent  " + this.name + p);
+                    positionProducer.sendPosition(this.name, p);
+                }
                 try {
                     Thread.sleep(speed);
                 } catch (InterruptedException e) {

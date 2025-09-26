@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+
 public class TrackBuilder {
 
     static List<TrackPath> straightElements = new ArrayList<>();
@@ -49,7 +51,7 @@ public class TrackBuilder {
 
         //extractPaths(points.stream().sorted(Comparator.comparing(Point::getX)).collect(Collectors.toList()));
 
-        return new TrackPath(points);
+        return new TrackPath(points, List.of(new TrackSection("Platform A")));
     }
 
     public static TrackPath createPlatformBPath() {
@@ -61,7 +63,7 @@ public class TrackBuilder {
         points.add(new Point(400, 150)); // platform area
         points.add(new Point(450, 100));
 
-        return new TrackPath(points);
+        return new TrackPath(points, List.of(new TrackSection("Platform B")));
     }
 
     public static TrackPath createConnectingPathsA() {
@@ -70,7 +72,7 @@ public class TrackBuilder {
         points.add(new Point(200, 100));
         points.add(new Point(250, 100));
 
-        return new TrackPath(points);
+        return new TrackPath(points, List.of(new TrackSection("Connecting A")));
     }
 
     public static TrackPath createConnectingPathsB() {
@@ -79,7 +81,7 @@ public class TrackBuilder {
         points.add(new Point(450, 100));
         points.add(new Point(500, 100));
 
-        return new TrackPath(points);
+        return new TrackPath(points, List.of(new TrackSection("Connecting B")));
     }
 
 //    public static TrackPath createPlatformBPath() {
@@ -127,7 +129,9 @@ public class TrackBuilder {
     public static TrackPath reverse(TrackPath original) {
         List<Point> reversed = new ArrayList<>(original.getPoints());
         Collections.reverse(reversed);
-        return new TrackPath(reversed);
+        List<TrackSection> sections = original.getSections();
+        Collections.reverse(sections);
+        return new TrackPath(reversed, sections);
     }
 
 //    public static List<TrackSection> splitSections(TrackPath trackPath){
@@ -218,6 +222,8 @@ public class TrackBuilder {
             inboundWhole.addAll(inbound);
         }
         List<Point> inbound = inboundWhole.stream().sorted(Comparator.comparing(Point::getX)).collect(Collectors.toList());
-        return new TrackPath(inbound);
+        return new TrackPath(inbound, platform.getSections());
     }
+
+
 }

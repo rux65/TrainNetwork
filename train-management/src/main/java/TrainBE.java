@@ -1,5 +1,4 @@
 import org.apache.kafka.clients.producer.*;
-import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.awt.Point;
 import java.util.List;
@@ -7,7 +6,7 @@ import java.util.Properties;
 import java.util.Random;
 
 // producer
-public class Train implements Runnable {
+public class TrainBE implements Runnable {
     private final int trainId;
     private final KafkaProducer<String, String> producer;
     private final String topic;
@@ -50,7 +49,7 @@ public class Train implements Runnable {
     private final Direction direction;
 
 
-    public Train(int trainId, String topic, Properties kafkaProps, String name, TrackPath path, List<TrackSection> trackSections, int speed, Direction direction) {
+    public TrainBE(int trainId, String topic, Properties kafkaProps, String name, TrackPath path, List<TrackSection> trackSections, int speed, Direction direction) {
         this.name = name;
         this.path = path;
         this.trackSections = trackSections;
