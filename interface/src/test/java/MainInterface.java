@@ -20,8 +20,7 @@ public class MainInterface {
             List<TrackSection> sectionsA = List.of(inboundSection, platformASection, outboundSection);
             List<TrackSection> sectionsB = List.of(outboundSection, platformBSection, inboundSection);
 
-
-
+            
             // Left-to-right train
             TrackPath fullPathA = TrackPath.concat(
                     TrackBuilder.createTrack(TrackBuilder.createConnectingPathsA()),
