@@ -9,14 +9,7 @@ public class MainInterface {
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
-            // Left-to-right train
-            TrackPath fullPathA = TrackPath.concat(
-                    TrackBuilder.createInboundTrackFromPlatform(TrackBuilder.createPlatformAPath()));
 
-            // Right-to-left train (reverse the path!)
-            TrackPath fullPathB = TrackPath.concat(
-                    TrackBuilder.reverse(TrackBuilder.createInboundTrackFromPlatform(TrackBuilder.createPlatformBPath()))
-            );
 
             //todo ideally we separate straight lines and branches into platform sections
 
@@ -27,8 +20,25 @@ public class MainInterface {
             List<TrackSection> sectionsA = List.of(inboundSection, platformASection, outboundSection);
             List<TrackSection> sectionsB = List.of(outboundSection, platformBSection, inboundSection);
 
-            Train train1 = new Train("Train A", fullPathA, sectionsA, 100);
-            Train train2 = new Train("Train B", fullPathB, sectionsB, 100);
+
+
+            // Left-to-right train
+            TrackPath fullPathA = TrackPath.concat(
+                    TrackBuilder.createTrack(TrackBuilder.createConnectingPathsA()),
+                    TrackBuilder.createTrack(TrackBuilder.createPlatformAPath()),
+                    TrackBuilder.createTrack(TrackBuilder.createConnectingPathsB())
+            );
+
+
+            // Right-to-left train (reverse the path!)
+            TrackPath fullPathB = TrackPath.concat(
+                    TrackBuilder.reverse(TrackBuilder.createTrack(TrackBuilder.createConnectingPathsB())),
+                    TrackBuilder.reverse(TrackBuilder.createTrack(TrackBuilder.createPlatformBPath())),
+                    TrackBuilder.reverse(TrackBuilder.createTrack(TrackBuilder.createConnectingPathsA()))
+            );
+
+            Train train1 = new Train("Train A", fullPathA, sectionsA, 100, Direction.OUT);
+            Train train2 = new Train("Train B", fullPathB, sectionsB, 100, Direction.IN);
 
             List<Train> trains = asList(train1, train2);
             List<TrackPath> tracks = asList(fullPathA, fullPathB);

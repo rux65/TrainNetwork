@@ -1,54 +1,75 @@
 version: '3'
-#services:
-#  db:
-#    image: postgres:9.6
-#    environment:
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_DB=trains
-#    healthcheck:
-##      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-#      test: [ "CMD", "pg_isready", "-q", "-U", "postgres" ]
-#      interval: 10s
-#      retries: 5
-#      timeout: 10s
-#    restart: always
-#    ports:
-#      - 5432:5432
-#
-#  flyway-myschema:
-#    image: boxfuse/flyway
-##    image: flyway/flyway
-##    command: -url=jdbc:postgresql://db:5432/trains -schemas="myschema,myschema2" -user=postgres -password=postgres -connectRetries=60 migrate
-#    entrypoint: [ "bash" ]
-#    #can use location for schemas, but versions cannot be the same
-#    #-locations=filesystem:/flyway/sql/sc1
-#    command: -c "/flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres -schemas=myschema migrate"
-##                 /flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres -schemas=myschema2 migrate"
-#    volumes:
-#      - ./flyway/migrations/sc1:/flyway/sql/sc1
-##      - ./flyway/migrations/sc2:/flyway/sql/sc2
-##      - ./flyway/migrations:/flyway/sql
-##      - ./flyway/migrations:/flyway/sql
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#
-#  flyway-myschema2:
-#    image: boxfuse/flyway
-#    #    image: flyway/flyway
-#    #    command: -url=jdbc:postgresql://db:5432/trains -schemas="myschema,myschema2" -user=postgres -password=postgres -connectRetries=60 migrate
-#    entrypoint: [ "bash" ]
-#    #can use location for schemas, but versions cannot be the same
-#    #-locations=filesystem:/flyway/sql/sc1
-#    command: -c "/flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres -schemas=myschema2 migrate"
-#    #      -c "/flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres migrate;"
-#    volumes:
-#      - ./flyway/migrations/sc2:/flyway/sql/sc2
-##      - ./flyway/migrations:/flyway/sql
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#
-##volumes:
-##    - db:
+services:
+  #  db:
+  #    image: postgres:9.6
+  #    environment:
+  #      - POSTGRES_PASSWORD=postgres
+  #      - POSTGRES_USER=postgres
+  #      - POSTGRES_DB=trains
+  #    healthcheck:
+  ##      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+  #      test: [ "CMD", "pg_isready", "-q", "-U", "postgres" ]
+  #      interval: 10s
+  #      retries: 5
+  #      timeout: 10s
+  #    restart: always
+  #    ports:
+  #      - 5432:5432
+  #
+  #  flyway-myschema:
+  #    image: boxfuse/flyway
+  ##    image: flyway/flyway
+  ##    command: -url=jdbc:postgresql://db:5432/trains -schemas="myschema,myschema2" -user=postgres -password=postgres -connectRetries=60 migrate
+  #    entrypoint: [ "bash" ]
+  #    #can use location for schemas, but versions cannot be the same
+  #    #-locations=filesystem:/flyway/sql/sc1
+  #    command: -c "/flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres -schemas=myschema migrate"
+  ##                 /flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres -schemas=myschema2 migrate"
+  #    volumes:
+  #      - ./flyway/migrations/sc1:/flyway/sql/sc1
+  ##      - ./flyway/migrations/sc2:/flyway/sql/sc2
+  ##      - ./flyway/migrations:/flyway/sql
+  ##      - ./flyway/migrations:/flyway/sql
+  #    depends_on:
+  #      db:
+  #        condition: service_healthy
+  #
+  #  flyway-myschema2:
+  #    image: boxfuse/flyway
+  #    #    image: flyway/flyway
+  #    #    command: -url=jdbc:postgresql://db:5432/trains -schemas="myschema,myschema2" -user=postgres -password=postgres -connectRetries=60 migrate
+  #    entrypoint: [ "bash" ]
+  #    #can use location for schemas, but versions cannot be the same
+  #    #-locations=filesystem:/flyway/sql/sc1
+  #    command: -c "/flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres -schemas=myschema2 migrate"
+  #    #      -c "/flyway/flyway -url=jdbc:postgresql://db:5432/trains -user=postgres -password=postgres migrate;"
+  #    volumes:
+  #      - ./flyway/migrations/sc2:/flyway/sql/sc2
+  ##      - ./flyway/migrations:/flyway/sql
+  #    depends_on:
+  #      db:
+  #        condition: service_healthy
+  #
+  ##volumes:
+  ##    - db:
+
+
+  broker:
+    image: apache/kafka:latest
+    container_name: broker
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+    ports:
+      - "9092:9092"
+      - "9093:9093"
