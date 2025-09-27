@@ -36,8 +36,8 @@ public class MainInterface {
                     TrackBuilder.reverse(TrackBuilder.createTrack(TrackBuilder.createConnectingPathsA()))
             );
 
-            Train train1 = new Train("Train A", fullPathA, sectionsA, 100, Direction.OUT);
-            Train train2 = new Train("Train B", fullPathB, sectionsB, 100, Direction.IN);
+            Train train1 = new Train("Train A", fullPathA, 100, Direction.OUT);
+            Train train2 = new Train("Train B", fullPathB, 100, Direction.IN);
 
             List<Train> trains = asList(train1, train2);
             List<TrackPath> tracks = asList(fullPathA, fullPathB);
