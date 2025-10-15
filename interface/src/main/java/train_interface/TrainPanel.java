@@ -1,3 +1,5 @@
+package train_interface;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Color;
@@ -26,15 +28,22 @@ public class TrainPanel extends JPanel {
         super.paintComponent(g);
 
         // Draw tracks
-        g.setColor(Color.GRAY);
+
         for (TrackPath track : tracks) {
+            g.setColor(Color.GRAY);
             List<Point> points = track.getPoints();
             for (int i = 0; i < points.size() - 1; i++) {
                 Point p1 = points.get(i);
                 Point p2 = points.get(i + 1);
                 g.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
+            // draw segment points
+            for (Point point : track.getBoundaries()) {
+                g.setColor(Color.GREEN); // Start point
+                g.fillOval(point.x - 4, point.y - 4, 8, 8); // 8px circle centered on point
+            }
         }
+
 
         for (Train train : trains) {
             Point p = train.getCurrentPosition();
@@ -43,7 +52,7 @@ public class TrainPanel extends JPanel {
                 g.setColor(Color.RED);
                 g.fillRect(p.x - 10, p.y - 10, 20, 20);
 
-                // Train label
+                // train_interface.Train label
                 g.setColor(Color.BLACK);
                 g.drawString(train.getName(), p.x - 10, p.y - 15);
             }

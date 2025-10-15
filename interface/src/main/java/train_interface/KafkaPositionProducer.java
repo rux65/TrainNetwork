@@ -1,3 +1,5 @@
+package train_interface;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -14,7 +16,7 @@ public class KafkaPositionProducer {
         //props.put("group.id", "train-command-group");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("group.id", UUID.randomUUID().toString());
+        props.put("group.id", UUID.randomUUID().toString()); // it restarts
         props.put("auto.offset.reset", "earliest");
 
         producer = new KafkaProducer<>(props);

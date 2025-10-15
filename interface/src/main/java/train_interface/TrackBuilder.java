@@ -1,14 +1,12 @@
+package train_interface;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
 
 public class TrackBuilder {
 
@@ -31,27 +29,13 @@ public class TrackBuilder {
 
         // x = 0, y =0 straight line increase and decrease
 
-//        points.add(new Point(200, 200));
-//        points.add(new Point(250, 200));
-
         points.add(new Point(250, 100));
         points.add(new Point(300, 100)); // platform
         points.add(new Point(350, 100)); // platform
         points.add(new Point(400, 100)); // platform
         points.add(new Point(450, 100));
 
-//        points.add(new Point(450, 200));
-//        points.add(new Point(500, 200));
-
-
-        // platform B
-//        points.add(new Point(300, 150)); // platform area
-//        points.add(new Point(350, 150)); // platform area
-//        points.add(new Point(400, 150)); // platform area
-
-        //extractPaths(points.stream().sorted(Comparator.comparing(Point::getX)).collect(Collectors.toList()));
-
-        return new TrackPath(points, List.of(new TrackSection("Platform A")));
+        return new TrackPath(points, List.of(new TrackSection("Platform A")), new HashSet<>(points));
     }
 
     public static TrackPath createPlatformBPath() {
@@ -63,85 +47,26 @@ public class TrackBuilder {
         points.add(new Point(400, 150)); // platform area
         points.add(new Point(450, 100));
 
-        return new TrackPath(points, List.of(new TrackSection("Platform B")));
+        return new TrackPath(points, List.of(new TrackSection("Platform B")), new HashSet<>(points));
     }
 
-    public static TrackPath createConnectingPathsA() {
+    public static TrackPath createSegment1Path() {
         List<Point> points = new ArrayList<>();
         // platform B
         points.add(new Point(200, 100));
         points.add(new Point(250, 100));
 
-        return new TrackPath(points, List.of(new TrackSection("Connecting A")));
+        return new TrackPath(points, List.of(new TrackSection("Segment 1")), new HashSet<>(points));
     }
 
-    public static TrackPath createConnectingPathsB() {
+    public static TrackPath createSegment2Path() {
         List<Point> points = new ArrayList<>();
         // platform B
         points.add(new Point(450, 100));
         points.add(new Point(500, 100));
 
-        return new TrackPath(points, List.of(new TrackSection("Connecting B")));
+        return new TrackPath(points, List.of(new TrackSection("Segment 2")), new HashSet<>(points));
     }
-
-//    public static TrackPath createPlatformBPath() {
-//        List<Point> points = new ArrayList<>();
-//        // right angles, isosceles triangles
-//        //points.add(new Point(200, 100));
-//        //points.add(new Point(250, 100));
-//        points.add(new Point(300, 150)); // platform area
-//        points.add(new Point(350, 150)); // platform area
-//        points.add(new Point(400, 150)); // platform area
-//        //points.add(new Point(450, 100));
-//        //points.add(new Point(500, 100));
-//        return new TrackPath(points);
-//    }
-
-//    static void extractPaths(List<Point> points) {
-//        Point prevPoint = null;
-//        List<Point> extractedPoints = new ArrayList<>();
-//        int swap = 0;
-//        for (Point point : points) {
-//            if (prevPoint != null && point.y == prevPoint.y && point.x != prevPoint.x) {
-//                if (swap == 1) {
-//                    swap = 0;
-//                    platformElements.add(new TrackPath(extractedPoints));
-//                    extractedPoints = new ArrayList<>();
-//                }
-//            } else {
-//                if (swap == 0) {
-//                    swap = 1;
-//                    straightElements.add(new TrackPath(extractedPoints));
-//                    extractedPoints = new ArrayList<>();
-//                }
-//            }
-//            extractedPoints.add(point);
-//
-//            if (prevPoint == null) {
-//                prevPoint = point;
-//                extractedPoints.add(point);
-//            }
-//        }
-//
-//        platformElements.
-//    }
-
-    public static TrackPath reverse(TrackPath original) {
-        List<Point> reversed = new ArrayList<>(original.getPoints());
-        Collections.reverse(reversed);
-        List<TrackSection> sections = original.getSections();
-        Collections.reverse(sections);
-        return new TrackPath(reversed, sections);
-    }
-
-//    public static List<TrackSection> splitSections(TrackPath trackPath){
-//        List<TrackSection> sections = new ArrayList<>();
-//        TrackSection section = new TrackSection("Section A");
-//        for (Point point : trackPath.getPoints()) {
-//
-//        }
-//
-//    }
 
 
     public static TrackPath createTrack(TrackPath platform) {
@@ -222,7 +147,7 @@ public class TrackBuilder {
             inboundWhole.addAll(inbound);
         }
         List<Point> inbound = inboundWhole.stream().sorted(Comparator.comparing(Point::getX)).collect(Collectors.toList());
-        return new TrackPath(inbound, platform.getSections());
+        return new TrackPath(inbound, platform.getSections(), platform.getBoundaries());
     }
 
 

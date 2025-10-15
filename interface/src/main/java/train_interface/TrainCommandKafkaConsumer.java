@@ -1,3 +1,5 @@
+package train_interface;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,16 +12,19 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class TrainCommandKafkaConsumer {
 
     private final TrainPanel panel;
     private final List<TrackPath> trackPaths;
+    private final  Map<String, TrackPath> routeMap;
 
-    public TrainCommandKafkaConsumer(TrainPanel panel, List<TrackPath> trackPaths) {
+    public TrainCommandKafkaConsumer(TrainPanel panel, List<TrackPath> trackPaths, Map<String, TrackPath> routeMap) {
         this.panel = panel;
         this.trackPaths = trackPaths;
+        this.routeMap = routeMap;
     }
 
     public void startListening() {
@@ -63,9 +68,14 @@ public class TrainCommandKafkaConsumer {
 
             Direction direction = Direction.valueOf(directionStr.toUpperCase());
 
-            // Choose track path and sections based on direction
-            TrackPath path = direction == Direction.OUT ? trackPaths.get(0) : trackPaths.get(1);
-            //List<TrackSection> sections = path.getSections();
+            String routeName = trainObj.get("route").getAsString();
+            TrackPath path = routeMap.get(routeName);
+            path = direction == Direction.RIGHT ?  TrackPath.reverse(path): path;
+
+            if (path == null) {
+                System.err.println(" Unknown route: " + routeName);
+                return;
+            }
 
             Train train = new Train(name, path, speed, direction);
             panel.addTrain(train); // add to panel if needed

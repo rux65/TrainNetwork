@@ -1,6 +1,8 @@
+package train_interface;
+
 public enum Direction {
-    OUT(0),
-    IN(1);
+    LEFT(0),
+    RIGHT(1);
 
     Direction(int direction) {
         this.direction = direction;

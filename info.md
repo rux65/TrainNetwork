@@ -1,4 +1,4 @@
-Train Network 
+train_interface.Train Network 
 
 - This project is aimed at mocking up a network system
 - This project looks at creating a simple rail network
