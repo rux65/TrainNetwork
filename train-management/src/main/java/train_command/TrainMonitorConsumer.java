@@ -10,7 +10,8 @@ import java.util.Properties;
 import java.util.UUID;
 
 // consumer
-public class TrainMonitor {
+// this is like a lifebeat, listens to position of train
+public class TrainMonitorConsumer {
     public static void startConsumer(String topic) {
         new Thread(() -> {
             System.out.println("Initializing Kafka consumer...");

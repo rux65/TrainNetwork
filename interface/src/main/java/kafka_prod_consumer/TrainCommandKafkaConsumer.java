@@ -1,4 +1,4 @@
-package train_interface;
+package kafka_prod_consumer;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -8,6 +8,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import train_interface.Direction;
+import train_interface.TrackPath;
+import train_interface.Train;
+import train_interface.TrainPanel;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -19,8 +23,9 @@ public class TrainCommandKafkaConsumer {
 
     private final TrainPanel panel;
     private final List<TrackPath> trackPaths;
-    private final  Map<String, TrackPath> routeMap;
+    private final Map<String, TrackPath> routeMap;
 
+    // receives which train will use what track
     public TrainCommandKafkaConsumer(TrainPanel panel, List<TrackPath> trackPaths, Map<String, TrackPath> routeMap) {
         this.panel = panel;
         this.trackPaths = trackPaths;
@@ -41,7 +46,7 @@ public class TrainCommandKafkaConsumer {
             try {
                 while (true) {
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-                    System.out.println("records in command receiver "+ records.count());
+                    System.out.println("records in command receiver " + records.count());
                     for (ConsumerRecord<String, String> record : records) {
                         handleMessage(record.value());
                     }
@@ -57,7 +62,7 @@ public class TrainCommandKafkaConsumer {
         Gson gson = new Gson();
         JsonObject obj = gson.fromJson(jsonMessage, JsonObject.class);
         JsonArray trainsArray = obj.getAsJsonArray("trains");
-        System.out.println("=========="+ trainsArray);
+        System.out.println("==========" + trainsArray);
 
         for (JsonElement elem : trainsArray) {
             JsonObject trainObj = elem.getAsJsonObject();
@@ -70,7 +75,7 @@ public class TrainCommandKafkaConsumer {
 
             String routeName = trainObj.get("route").getAsString();
             TrackPath path = routeMap.get(routeName);
-            path = direction == Direction.RIGHT ?  TrackPath.reverse(path): path;
+            path = direction == Direction.RIGHT ? TrackPath.reverse(path) : path;
 
             if (path == null) {
                 System.err.println(" Unknown route: " + routeName);

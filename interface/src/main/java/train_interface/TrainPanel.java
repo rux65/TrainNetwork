@@ -28,7 +28,6 @@ public class TrainPanel extends JPanel {
         super.paintComponent(g);
 
         // Draw tracks
-
         for (TrackPath track : tracks) {
             g.setColor(Color.GRAY);
             List<Point> points = track.getPoints();
@@ -43,7 +42,6 @@ public class TrainPanel extends JPanel {
                 g.fillOval(point.x - 4, point.y - 4, 8, 8); // 8px circle centered on point
             }
         }
-
 
         for (Train train : trains) {
             Point p = train.getCurrentPosition();

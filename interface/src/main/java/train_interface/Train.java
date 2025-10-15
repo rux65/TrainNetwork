@@ -1,5 +1,7 @@
 package train_interface;
 
+import kafka_prod_consumer.KafkaPositionProducer;
+
 import java.awt.Point;
 import java.util.List;
 
@@ -22,7 +24,6 @@ public class Train implements Runnable {
     }
 
     public synchronized Point getCurrentPosition() {
-        //positionProducer.sendPosition(this.getName(), path.getPoint(positionIndex));
         return path.getPoint(positionIndex);
     }
 

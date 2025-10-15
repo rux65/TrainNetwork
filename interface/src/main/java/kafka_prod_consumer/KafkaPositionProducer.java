@@ -1,4 +1,4 @@
-package train_interface;
+package kafka_prod_consumer;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -13,7 +13,7 @@ public class KafkaPositionProducer {
     public KafkaPositionProducer() {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
-        //props.put("group.id", "train-command-group");
+        //props.put("group.id", "train-command-group"); // cannot give group id
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("group.id", UUID.randomUUID().toString()); // it restarts

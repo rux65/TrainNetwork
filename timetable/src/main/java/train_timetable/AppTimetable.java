@@ -4,7 +4,7 @@ package train_timetable;
  * Hello world!
  *
  */
-public class App 
+public class AppTimetable
 {
     public static void main( String[] args )
     {

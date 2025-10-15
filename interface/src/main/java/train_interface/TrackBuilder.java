@@ -50,6 +50,10 @@ public class TrackBuilder {
         return new TrackPath(points, List.of(new TrackSection("Platform B")), new HashSet<>(points));
     }
 
+    /**
+     * this is the left hand side straight segment
+     * @return
+     */
     public static TrackPath createSegment1Path() {
         List<Point> points = new ArrayList<>();
         // platform B
@@ -59,6 +63,10 @@ public class TrackBuilder {
         return new TrackPath(points, List.of(new TrackSection("Segment 1")), new HashSet<>(points));
     }
 
+    /**
+     * this is the right hand side straight segment
+     * @return
+     */
     public static TrackPath createSegment2Path() {
         List<Point> points = new ArrayList<>();
         // platform B
@@ -68,11 +76,16 @@ public class TrackBuilder {
         return new TrackPath(points, List.of(new TrackSection("Segment 2")), new HashSet<>(points));
     }
 
-
-    public static TrackPath createTrack(TrackPath platform) {
+    /**
+     * This method gets the platform and constructs a path of subpoints
+     * to make the train appear like it is moving more smoothly
+     * @param trackPath
+     * @return
+     */
+    public static TrackPath createTrack(TrackPath trackPath) {
         Set<Point> inboundWhole = new HashSet<>();
         Point prevPoint = null;
-        for (Point point : platform.getPoints()) {
+        for (Point point : trackPath.getPoints()) {
             ArrayList<Point> inbound = new ArrayList<>();
 
             //straight line increase
@@ -147,7 +160,7 @@ public class TrackBuilder {
             inboundWhole.addAll(inbound);
         }
         List<Point> inbound = inboundWhole.stream().sorted(Comparator.comparing(Point::getX)).collect(Collectors.toList());
-        return new TrackPath(inbound, platform.getSections(), platform.getBoundaries());
+        return new TrackPath(inbound, trackPath.getSections(), trackPath.getBoundaries());
     }
 
 
